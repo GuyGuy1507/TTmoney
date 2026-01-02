@@ -16,7 +16,18 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-app.use(cors());
+app.use(cors({
+  origin: [
+    'http://localhost:3000',
+    'https://localhost:3000',
+    'https://ttmoney.vercel.app',
+    'https://*.vercel.app',
+    'https://railway.app',
+    'https://*.railway.app',
+    '*'
+  ],
+  credentials: true
+}));
 app.use(express.json());
 
 // KHAI BÁO ROUTE TẠI ĐÂY (Phải nằm TRƯỚC các middleware báo lỗi)
@@ -29,9 +40,14 @@ app.use('/api/reports', reportRoutes);
 app.use('/api/incomes', incomeRoutes);
 app.use('/api/savings-goals', savingsGoalRoutes);
 
-// Route kiểm tra nhanh
+// Route kiểm tra nhanh - không cần database
 app.get('/api/health', (req, res) => {
-  res.json({ status: 'ok', message: 'Backend is ready' });
+  res.status(200).json({
+    status: 'ok',
+    message: 'Backend is ready',
+    timestamp: new Date().toISOString(),
+    environment: process.env.NODE_ENV || 'development'
+  });
 });
 
 // Middleware xử lý lỗi 404 (Trả về JSON thay vì HTML để tránh lỗi Unexpected token)
