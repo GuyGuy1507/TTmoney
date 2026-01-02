@@ -55,6 +55,24 @@ app.use((req, res) => {
   res.status(404).json({ error: 'Đường dẫn không tồn tại trên Server' });
 });
 
-app.listen(PORT, '0.0.0.0', () => {
-  console.log(`✅ Backend đang chạy tại http://localhost:${PORT}`);
-});
+// Test database connection trước khi start server
+import db from './config/database.js';
+
+console.log('🔄 Testing database connection...');
+db.query('SELECT 1')
+  .then(() => {
+    console.log('✅ Database connection successful');
+    app.listen(PORT, '0.0.0.0', () => {
+      console.log(`✅ Backend đang chạy tại http://localhost:${PORT}`);
+      console.log(`🌍 Environment: ${process.env.NODE_ENV || 'development'}`);
+      console.log(`🔌 Database: Connected`);
+    });
+  })
+  .catch((error) => {
+    console.error('❌ Database connection failed:', error.message);
+    console.log('⚠️ Starting server anyway for healthcheck...');
+    // Vẫn start server để healthcheck pass
+    app.listen(PORT, '0.0.0.0', () => {
+      console.log(`⚠️ Backend đang chạy nhưng database lỗi tại http://localhost:${PORT}`);
+    });
+  });
