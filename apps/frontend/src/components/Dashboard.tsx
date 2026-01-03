@@ -42,18 +42,12 @@ export default function Dashboard({ refreshTrigger }: DashboardProps) {
         console.log('Stats set successfully');
       } catch (error) {
         console.error('Failed to fetch dashboard stats:', error);
-        console.log('Falling back to mock data');
-        // Fallback to mock data
+        // New users start with 0 data
         setStats({
-          totalBalance: 2550,
-          monthlyIncome: 3000,
-          monthlyExpenses: 450,
-          categories: [
-            { name: 'Food', amount: 150 },
-            { name: 'Transport', amount: 100 },
-            { name: 'Entertainment', amount: 100 },
-            { name: 'Shopping', amount: 100 },
-          ],
+          totalBalance: 0,
+          monthlyIncome: 0,
+          monthlyExpenses: 0,
+          categories: [],
         });
       } finally {
         setLoading(false);
