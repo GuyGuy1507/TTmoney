@@ -3,8 +3,11 @@
     "builder": "NIXPACKS"
   },
   "deploy": {
-    "startCommand": "node src/index.js",
+    "startCommand": "cd apps/backend && node src/index.js",
     "healthcheckPath": "/api/health",
-    "restartPolicyType": "ON_FAILURE"
+    "restartPolicyType": "ON_FAILURE",
+    "source": {
+      "directory": "apps/backend"
+    }
   }
 }
