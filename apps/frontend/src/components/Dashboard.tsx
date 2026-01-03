@@ -28,7 +28,7 @@ export default function Dashboard({ refreshTrigger }: DashboardProps) {
     const fetchStats = async () => {
       console.log('Fetching dashboard stats...');
       try {
-        const response = await apiClient.get('/reports/summary');
+        const response = await apiClient.get('/api/reports/summary');
         console.log('Dashboard stats response:', response.data);
         setStats({
           totalBalance: response.data.totalBalance,
