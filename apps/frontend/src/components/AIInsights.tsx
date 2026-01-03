@@ -3,7 +3,6 @@
 import { useEffect, useState } from 'react';
 import apiClient from '@/lib/apiClient';
 import { generateFinancialInsights } from '@/lib/ai';
-import { formatCurrency } from '@/lib/currency';
 import useAuthStore from '@/store/authStore';
 
 interface Insight {
