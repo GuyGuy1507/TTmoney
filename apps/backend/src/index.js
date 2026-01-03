@@ -22,6 +22,7 @@ app.use(cors({
     'https://localhost:3000',
     'https://ttmoney.vercel.app',
     'https://*.vercel.app',
+    'https://ttt-money-app-hihi.vercel.app',
     'https://railway.app',
     'https://*.railway.app',
     '*'
