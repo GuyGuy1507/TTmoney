@@ -20,7 +20,6 @@ export default function AIInsights({ refreshTrigger }: AIInsightsProps) {
   const [insights, setInsights] = useState<Insight[]>([]);
   const [loading, setLoading] = useState(true);
   const user = useAuthStore((state: any) => state.user);
-  const currency = user?.currency || 'USD';
 
   useEffect(() => {
     const fetchInsights = async () => {
