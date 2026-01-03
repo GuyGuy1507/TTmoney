@@ -1,0 +1,13 @@
+{
+  "build": {
+    "builder": "NIXPACKS"
+  },
+  "deploy": {
+    "startCommand": "cd apps/backend && npm start",
+    "healthcheckPath": "/api/health",
+    "restartPolicyType": "ON_FAILURE",
+    "source": {
+      "directory": "apps/backend"
+    }
+  }
+}
