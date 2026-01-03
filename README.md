@@ -285,3 +285,4 @@ For support, email support@expensemanager.com or create an issue on GitHub.
 ---
 
 **Made with ❤️ for better personal finance management**
+"# Force redeploy"  
