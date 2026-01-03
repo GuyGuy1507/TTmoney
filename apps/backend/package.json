@@ -6,8 +6,8 @@
   "scripts": {
     "dev": "node --watch src/index.js",
     "build": "tsc",
-    "start": "npm run build && node dist/index.js",
-    "production": "node dist/index.js",
+    "start": "node src/index.js",
+    "production": "node src/index.js",
     "lint": "eslint src"
   },
   "dependencies": {
