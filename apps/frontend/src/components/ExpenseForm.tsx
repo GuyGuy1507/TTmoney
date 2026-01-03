@@ -73,7 +73,7 @@ export default function ExpenseForm({ onSubmit, onClose, editingExpense }: Expen
 
   const fetchCategories = async () => {
     try {
-      const response = await apiClient.get('/categories');
+      const response = await apiClient.get('/api/categories');
       setCategories(response.data.categories);
       if (response.data.categories.length > 0 && !editingExpense) {
         setFormData((prev) => ({ ...prev, categoryId: response.data.categories[0].id }));
@@ -104,7 +104,7 @@ export default function ExpenseForm({ onSubmit, onClose, editingExpense }: Expen
     try {
       let response;
       if (editingExpense) {
-        response = await apiClient.put(`/expenses/${editingExpense.id}`, {
+        response = await apiClient.put(`/api/expenses/${editingExpense.id}`, {
           categoryId: formData.categoryId,
           amount,
           description: formData.description,
@@ -113,7 +113,7 @@ export default function ExpenseForm({ onSubmit, onClose, editingExpense }: Expen
         });
         setSuccessMessage('Expense updated successfully!');
       } else {
-        response = await apiClient.post('/expenses', {
+        response = await apiClient.post('/api/expenses', {
           categoryId: formData.categoryId,
           amount,
           description: formData.description,

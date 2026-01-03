@@ -39,7 +39,7 @@ export default function ExpenseList({ refreshTrigger, onEdit }: ExpenseListProps
   const fetchExpenses = async () => {
     try {
       setIsLoading(true);
-      const response = await apiClient.get('/expenses');
+      const response = await apiClient.get('/api/expenses');
       setExpenses(response.data.expenses || []);
     } catch (err: any) {
       setError('Failed to load expenses');
@@ -52,7 +52,7 @@ export default function ExpenseList({ refreshTrigger, onEdit }: ExpenseListProps
     if (!confirm('Are you sure?')) return;
 
     try {
-      await apiClient.delete(`/expenses/${id}`);
+      await apiClient.delete(`/api/expenses/${id}`);
       setExpenses(expenses.filter((e) => e.id !== id));
     } catch (err: any) {
       setError('Failed to delete expense');
