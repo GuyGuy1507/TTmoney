@@ -39,7 +39,7 @@ export default function IncomeList({ refreshTrigger, onEdit }: IncomeListProps) 
   const fetchIncomes = async () => {
     try {
       setIsLoading(true);
-      const response = await apiClient.get('/incomes');
+      const response = await apiClient.get('/api/incomes');
       setIncomes(response.data.incomes || []);
     } catch (err: any) {
       setError('Failed to load incomes');
@@ -52,7 +52,7 @@ export default function IncomeList({ refreshTrigger, onEdit }: IncomeListProps) 
     if (!confirm('Are you sure?')) return;
 
     try {
-      await apiClient.delete(`/incomes/${id}`);
+      await apiClient.delete(`/api/incomes/${id}`);
       setIncomes(incomes.filter((i) => i.id !== id));
     } catch (err: any) {
       setError('Failed to delete income');

@@ -58,7 +58,7 @@ export default function IncomeForm({ onSubmit, onClose, editingIncome }: IncomeF
 
   const fetchSources = async () => {
     try {
-      const response = await apiClient.get('/incomes/sources');
+      const response = await apiClient.get('/api/incomes/sources');
       setSources(response.data.sources);
       if (response.data.sources.length > 0 && !editingIncome) {
         setFormData((prev) => ({ ...prev, sourceId: response.data.sources[0].id }));
@@ -89,7 +89,7 @@ export default function IncomeForm({ onSubmit, onClose, editingIncome }: IncomeF
     try {
       let response;
       if (editingIncome) {
-        response = await apiClient.put(`/incomes/${editingIncome.id}`, {
+        response = await apiClient.put(`/api/incomes/${editingIncome.id}`, {
           sourceId: formData.sourceId,
           amount,
           description: formData.description,
@@ -97,7 +97,7 @@ export default function IncomeForm({ onSubmit, onClose, editingIncome }: IncomeF
         });
         setSuccessMessage('Income updated successfully!');
       } else {
-        response = await apiClient.post('/incomes', {
+        response = await apiClient.post('/api/incomes', {
           sourceId: formData.sourceId,
           amount,
           description: formData.description,
