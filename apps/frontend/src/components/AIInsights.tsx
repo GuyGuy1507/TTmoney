@@ -28,8 +28,8 @@ export default function AIInsights({ refreshTrigger }: AIInsightsProps) {
 
         // Get current month's data
         const [summaryResponse, expensesResponse] = await Promise.all([
-          apiClient.get('/reports/summary'),
-          apiClient.get('/expenses')
+          apiClient.get('/api/reports/summary'),
+          apiClient.get('/api/expenses')
         ]);
 
         const summary = summaryResponse.data;

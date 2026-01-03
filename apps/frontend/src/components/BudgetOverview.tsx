@@ -28,7 +28,7 @@ export default function BudgetOverview({ refreshTrigger }: BudgetOverviewProps) 
 
   const fetchBudgetStatus = async () => {
     try {
-      const response = await apiClient.get('/budgets/overall/status');
+      const response = await apiClient.get('/api/budgets/overall/status');
       setBudgetStatus(response.data);
     } catch (error) {
       console.error('Failed to load budget status');
