@@ -79,13 +79,13 @@ export default function AnalyticsPage() {
     setLoading(true);
     try {
       if (activeTab === 'trends') {
-        const response = await apiClient.get(`/reports/expense-trends?months=${period}`);
+        const response = await apiClient.get(`/api/reports/expense-trends?months=${period}`);
         setTrendsData(response.data.trends);
       } else if (activeTab === 'categories') {
-        const response = await apiClient.get('/reports/category-analytics');
+        const response = await apiClient.get('/api/reports/category-analytics');
         setCategoryData(response.data.categories);
       } else if (activeTab === 'comparison') {
-        const response = await apiClient.get('/reports/monthly-comparison');
+        const response = await apiClient.get('/api/reports/monthly-comparison');
         setComparisonData(response.data);
       }
     } catch (error) {
