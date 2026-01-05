@@ -2,19 +2,22 @@
 
 import { FiHome, FiTrendingUp, FiSettings, FiLogOut, FiTarget, FiDollarSign } from 'react-icons/fi';
 import Link from 'next/link';
+import { useTranslation } from '@/hooks/useTranslation';
 
 interface SidebarProps {
   onClose?: () => void;
 }
 
 export default function Sidebar({ onClose }: SidebarProps) {
+  const { t } = useTranslation();
+
   const menuItems = [
-    { name: 'Dashboard', icon: FiHome, href: '/' },
-    { name: 'Incomes', icon: FiDollarSign, href: '/incomes' },
-    { name: 'Expenses', icon: FiTrendingUp, href: '/expenses' },
-    { name: 'Analytics', icon: FiTrendingUp, href: '/analytics' },
-    { name: 'Goals', icon: FiTarget, href: '/goals' },
-    { name: 'Settings', icon: FiSettings, href: '/settings' },
+    { name: t('dashboard'), icon: FiHome, href: '/' },
+    { name: t('incomes'), icon: FiDollarSign, href: '/incomes' },
+    { name: t('expenses'), icon: FiTrendingUp, href: '/expenses' },
+    { name: t('analytics'), icon: FiTrendingUp, href: '/analytics' },
+    { name: t('goals'), icon: FiTarget, href: '/goals' },
+    { name: t('settings'), icon: FiSettings, href: '/settings' },
   ];
 
   const handleClose = () => {
@@ -25,7 +28,7 @@ export default function Sidebar({ onClose }: SidebarProps) {
     <aside className="bg-dark text-white flex flex-col h-full">
       <div className="p-6 font-bold text-xl border-b border-gray-700 flex justify-between items-center">
         💰 ExpenseApp
-        <button onClick={handleClose} className="p-2 rounded-full hover:bg-gray-700 focus:outline-none focus:ring lg:hidden">
+        <button onClick={handleClose} className="p-2 rounded-full hover:bg-gray-700 focus:outline-none focus:ring lg:hidden" title={t('close')}>
           ✕
         </button>
       </div>
@@ -46,7 +49,7 @@ export default function Sidebar({ onClose }: SidebarProps) {
       <div className="p-4 border-t border-gray-700">
         <button className="w-full flex items-center space-x-3 px-4 py-3 rounded-lg hover:bg-gray-700 transition-colors">
           <FiLogOut size={20} />
-          <span>Logout</span>
+          <span>{t('logout')}</span>
         </button>
       </div>
     </aside>
