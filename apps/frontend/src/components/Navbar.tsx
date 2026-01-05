@@ -3,7 +3,6 @@
 import { useState } from 'react';
 import { FiLogOut, FiUser, FiMenu } from 'react-icons/fi';
 import useAuthStore from '@/store/authStore';
-import { useRouter } from 'next/navigation';
 import { useTranslation } from '@/hooks/useTranslation';
 
 interface NavbarProps {
@@ -12,7 +11,6 @@ interface NavbarProps {
 
 export default function Navbar({ onMenuClick }: NavbarProps) {
   const [showMenu, setShowMenu] = useState(false);
-  const router = useRouter();
   const user = useAuthStore((state: any) => state.user);
   const logout = useAuthStore((state: any) => state.logout);
   const { t } = useTranslation();
