@@ -117,7 +117,7 @@ export default function SettingsPage() {
         categoryId: newBudget.categoryId,
         amount: parseFloat(newBudget.amount),
         period: 'monthly',
-        alertThreshold: 80,
+        alertThreshold: 0.80,
       });
       setNewBudget({ categoryId: '', amount: '' });
       loadBudgets();
