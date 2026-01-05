@@ -120,7 +120,6 @@ export const translations = {
     period: 'Period',
     transactions: 'transactions',
     average: 'Average',
-    monthlyExpenses: 'Monthly Expenses',
 
     // Settings
     accountSettings: 'Settings',
@@ -281,7 +280,6 @@ export const translations = {
     period: 'Thời gian',
     transactions: 'giao dịch',
     average: 'Trung bình',
-    monthlyExpenses: 'Chi tiêu hàng tháng',
 
     // Settings
     accountSettings: 'Cài đặt',
