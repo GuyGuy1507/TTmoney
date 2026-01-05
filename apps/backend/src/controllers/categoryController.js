@@ -2,10 +2,23 @@ import Category from '../models/Category.js';
 
 export const createCategory = async (req, res) => {
   try {
+    if (!req.userId) {
+      return res.status(401).json({ error: 'Authentication required' });
+    }
+
     const { name, icon, color } = req.body;
 
     if (!name || !icon || !color) {
+      console.log('Missing required fields');
       return res.status(400).json({ error: 'name, icon, and color are required' });
+    }
+
+    // Check if category with same name already exists for this user
+    const existingCategories = await Category.findByUserId(req.userId);
+    const existingCategory = existingCategories.find(cat => cat.name.toLowerCase() === name.toLowerCase());
+
+    if (existingCategory) {
+      return res.status(409).json({ error: 'Category with this name already exists' });
     }
 
     const category = await Category.create(req.userId, name, icon, color, false);

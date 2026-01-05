@@ -34,6 +34,7 @@ export default function SettingsPage() {
   const [newBudget, setNewBudget] = useState({ categoryId: '', amount: '' });
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
+  const [messageType, setMessageType] = useState<'success' | 'error'>('success');
 
   useEffect(() => {
     if (activeTab === 'categories') loadCategories();
@@ -42,7 +43,7 @@ export default function SettingsPage() {
 
   const loadCategories = async () => {
     try {
-      const response = await apiClient.get('/categories');
+      const response = await apiClient.get('/api/categories');
       setCategories(response.data.categories);
     } catch (error) {
       console.error('Failed to load categories');
@@ -51,7 +52,7 @@ export default function SettingsPage() {
 
   const loadBudgets = async () => {
     try {
-      const response = await apiClient.get('/budgets');
+      const response = await apiClient.get('/api/budgets');
       setBudgets(response.data.budgets);
     } catch (error) {
       console.error('Failed to load budgets');
@@ -61,11 +62,14 @@ export default function SettingsPage() {
   const updateProfile = async () => {
     setLoading(true);
     try {
-      await apiClient.put('/auth/profile', profileData);
+      await apiClient.put('/api/auth/profile', profileData);
       setMessage('Profile updated successfully!');
+      setMessageType('success');
       setTimeout(() => setMessage(''), 3000);
     } catch (error) {
       setMessage('Failed to update profile');
+      setMessageType('error');
+      setTimeout(() => setMessage(''), 5000);
     } finally {
       setLoading(false);
     }
@@ -74,32 +78,42 @@ export default function SettingsPage() {
   const addCategory = async () => {
     if (!newCategory.name.trim()) return;
     try {
-      await apiClient.post('/categories', newCategory);
+      await apiClient.post('/api/categories', newCategory);
       setNewCategory({ name: '', icon: '📦', color: '#3b82f6' });
       loadCategories();
       setMessage('Category added successfully!');
+      setMessageType('success');
       setTimeout(() => setMessage(''), 3000);
-    } catch (error) {
-      setMessage('Failed to add category');
+    } catch (error: any) {
+      console.error('Add category error:', error);
+      console.error('Error response:', error.response);
+      const errorMessage = error.response?.data?.error || error.message || 'Failed to add category';
+      setMessage(errorMessage);
+      setMessageType('error');
+      setTimeout(() => setMessage(''), 5000);
     }
   };
 
   const deleteCategory = async (id: string) => {
     if (!confirm('Are you sure you want to delete this category?')) return;
     try {
-      await apiClient.delete(`/categories/${id}`);
+      await apiClient.delete(`/api/categories/${id}`);
       loadCategories();
       setMessage('Category deleted successfully!');
+      setMessageType('success');
       setTimeout(() => setMessage(''), 3000);
-    } catch (error) {
-      setMessage('Failed to delete category');
+    } catch (error: any) {
+      const errorMessage = error.response?.data?.error || 'Failed to delete category';
+      setMessage(errorMessage);
+      setMessageType('error');
+      setTimeout(() => setMessage(''), 5000);
     }
   };
 
   const addBudget = async () => {
     if (!newBudget.categoryId || !newBudget.amount) return;
     try {
-      await apiClient.post('/budgets', {
+      await apiClient.post('/api/budgets', {
         categoryId: newBudget.categoryId,
         amount: parseFloat(newBudget.amount),
         period: 'monthly',
@@ -108,21 +122,29 @@ export default function SettingsPage() {
       setNewBudget({ categoryId: '', amount: '' });
       loadBudgets();
       setMessage('Budget added successfully!');
+      setMessageType('success');
       setTimeout(() => setMessage(''), 3000);
-    } catch (error) {
-      setMessage('Failed to add budget');
+    } catch (error: any) {
+      const errorMessage = error.response?.data?.error || 'Failed to add budget';
+      setMessage(errorMessage);
+      setMessageType('error');
+      setTimeout(() => setMessage(''), 5000);
     }
   };
 
   const deleteBudget = async (id: string) => {
     if (!confirm('Are you sure you want to delete this budget?')) return;
     try {
-      await apiClient.delete(`/budgets/${id}`);
+      await apiClient.delete(`/api/budgets/${id}`);
       loadBudgets();
       setMessage('Budget deleted successfully!');
+      setMessageType('success');
       setTimeout(() => setMessage(''), 3000);
-    } catch (error) {
-      setMessage('Failed to delete budget');
+    } catch (error: any) {
+      const errorMessage = error.response?.data?.error || 'Failed to delete budget';
+      setMessage(errorMessage);
+      setMessageType('error');
+      setTimeout(() => setMessage(''), 5000);
     }
   };
 
@@ -135,7 +157,11 @@ export default function SettingsPage() {
         </div>
 
         {message && (
-          <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded">
+          <div className={`px-4 py-3 rounded ${
+            messageType === 'error'
+              ? 'bg-red-100 border border-red-400 text-red-700'
+              : 'bg-green-100 border border-green-400 text-green-700'
+          }`}>
             {message}
           </div>
         )}

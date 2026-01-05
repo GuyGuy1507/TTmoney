@@ -56,7 +56,7 @@ export default function GoalsPage() {
 
   const loadGoals = async () => {
     try {
-      const response = await apiClient.get('/savings-goals');
+      const response = await apiClient.get('/api/savings-goals');
       setGoals(response.data.goals);
     } catch (error) {
       console.error('Failed to load goals');
@@ -67,7 +67,7 @@ export default function GoalsPage() {
 
   const loadContributions = async (goalId: string) => {
     try {
-      const response = await apiClient.get(`/savings-goals/${goalId}/contributions`);
+      const response = await apiClient.get(`/api/savings-goals/${goalId}/contributions`);
       setContributions(response.data.contributions);
     } catch (error) {
       console.error('Failed to load contributions');
@@ -78,7 +78,7 @@ export default function GoalsPage() {
     if (!newGoal.name || !newGoal.targetAmount) return;
 
     try {
-      await apiClient.post('/savings-goals', {
+      await apiClient.post('/api/savings-goals', {
         name: newGoal.name,
         targetAmount: parseFloat(newGoal.targetAmount),
         targetDate: newGoal.targetDate || null,
@@ -104,7 +104,7 @@ export default function GoalsPage() {
     if (!selectedGoal || !newContribution.amount) return;
 
     try {
-      await apiClient.post(`/savings-goals/${selectedGoal.id}/contributions`, {
+      await apiClient.post(`/api/savings-goals/${selectedGoal.id}/contributions`, {
         amount: parseFloat(newContribution.amount),
         description: newContribution.description,
         contributionDate: newContribution.contributionDate
@@ -127,7 +127,7 @@ export default function GoalsPage() {
     if (!confirm('Are you sure you want to delete this savings goal?')) return;
 
     try {
-      await apiClient.delete(`/savings-goals/${goalId}`);
+      await apiClient.delete(`/api/savings-goals/${goalId}`);
       loadGoals();
       if (selectedGoal?.id === goalId) {
         setSelectedGoal(null);
