@@ -202,9 +202,9 @@ export default function AnalyticsPage() {
         {activeTab === 'trends' && (
           <div className="space-y-6">
             <div className="bg-white rounded-lg shadow p-6">
-              <div className="flex justify-between items-center mb-6">
+              <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-6 space-y-4 sm:space-y-0">
                 <h2 className="text-xl font-semibold">Expense Trends</h2>
-                <div className="flex items-center space-x-4">
+                <div className="flex items-center space-x-4 self-start sm:self-auto">
                   <span className="text-sm text-gray-600">Period:</span>
                   <select
                     value={period}
