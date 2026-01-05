@@ -120,22 +120,24 @@ export default function ExpenseList({ refreshTrigger, onEdit }: ExpenseListProps
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -20 }}
                     transition={{ duration: 0.3 }}
-                    className="flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition mb-2"
+                    className="flex flex-col sm:flex-row sm:items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition mb-2 space-y-3 sm:space-y-0"
                   >
-                    <div className="flex items-center space-x-4">
-                      <span className="inline-block px-3 py-1 rounded-full text-white text-sm" style={{ backgroundColor: expense.category_color }}>
+                    <div className="flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-4">
+                      <span className="inline-block px-3 py-1 rounded-full text-white text-sm self-start sm:self-auto" style={{ backgroundColor: expense.category_color }}>
                         {expense.category_name}
                       </span>
-                      <span className="text-gray-700">{expense.description || 'No description'}</span>
+                      <span className="text-gray-700 text-sm sm:text-base">{expense.description || 'No description'}</span>
                     </div>
-                    <div className="flex items-center space-x-2">
-                      <span className="font-semibold text-gray-800">{formatCurrency(expense.amount, currency)}</span>
-                      <button onClick={(e) => { e.stopPropagation(); onEdit && onEdit(expense); }} className="p-2 text-blue-500 hover:text-blue-700 cursor-pointer">
-                        <FiEdit2 size={18} />
-                      </button>
-                      <button onClick={() => handleDelete(expense.id)} className="text-red-500 hover:text-red-700">
-                        <FiTrash2 size={18} />
-                      </button>
+                    <div className="flex items-center justify-between sm:justify-end space-x-2 w-full sm:w-auto">
+                      <span className="font-semibold text-gray-800 text-lg">{formatCurrency(expense.amount, currency)}</span>
+                      <div className="flex items-center space-x-1">
+                        <button onClick={(e) => { e.stopPropagation(); onEdit && onEdit(expense); }} className="p-2 text-blue-500 hover:text-blue-700 cursor-pointer rounded hover:bg-blue-50">
+                          <FiEdit2 size={18} />
+                        </button>
+                        <button onClick={() => handleDelete(expense.id)} className="p-2 text-red-500 hover:text-red-700 rounded hover:bg-red-50">
+                          <FiTrash2 size={18} />
+                        </button>
+                      </div>
                     </div>
                   </motion.div>
                 ))}
