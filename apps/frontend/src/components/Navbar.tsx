@@ -19,7 +19,8 @@ export default function Navbar({ onMenuClick }: NavbarProps) {
 
   const handleLogout = () => {
     logout();
-    router.push('/login');
+    // Small delay to ensure state update, then redirect
+    setTimeout(() => router.push('/login'), 100);
   };
 
   return (
