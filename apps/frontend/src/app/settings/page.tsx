@@ -6,6 +6,7 @@ import useAuthStore from '@/store/authStore';
 import apiClient from '@/lib/apiClient';
 import { FiUser, FiDollarSign, FiGlobe, FiSave, FiPlus, FiTrash2 } from 'react-icons/fi';
 import { formatCurrency } from '@/lib/currency';
+import { useTranslation } from '@/hooks/useTranslation';
 
 interface Category {
   id: string;
@@ -23,6 +24,7 @@ interface Budget {
 
 export default function SettingsPage() {
   const user = useAuthStore((state: any) => state.user);
+  const { t, language, changeLanguage } = useTranslation();
   const [activeTab, setActiveTab] = useState<'profile' | 'categories' | 'budgets'>('profile');
   const [profileData, setProfileData] = useState({
     currency: user?.currency || 'USD',
@@ -63,11 +65,11 @@ export default function SettingsPage() {
     setLoading(true);
     try {
       await apiClient.put('/api/auth/profile', profileData);
-      setMessage('Profile updated successfully!');
+      setMessage(t('profileUpdated'));
       setMessageType('success');
       setTimeout(() => setMessage(''), 3000);
     } catch (error) {
-      setMessage('Failed to update profile');
+      setMessage(t('failedToUpdateProfile'));
       setMessageType('error');
       setTimeout(() => setMessage(''), 5000);
     } finally {
@@ -81,13 +83,13 @@ export default function SettingsPage() {
       await apiClient.post('/api/categories', newCategory);
       setNewCategory({ name: '', icon: '📦', color: '#3b82f6' });
       loadCategories();
-      setMessage('Category added successfully!');
+      setMessage(t('categoryAdded'));
       setMessageType('success');
       setTimeout(() => setMessage(''), 3000);
     } catch (error: any) {
       console.error('Add category error:', error);
       console.error('Error response:', error.response);
-      const errorMessage = error.response?.data?.error || error.message || 'Failed to add category';
+      const errorMessage = error.response?.data?.error || t('failedToAddCategory');
       setMessage(errorMessage);
       setMessageType('error');
       setTimeout(() => setMessage(''), 5000);
@@ -95,15 +97,15 @@ export default function SettingsPage() {
   };
 
   const deleteCategory = async (id: string) => {
-    if (!confirm('Are you sure you want to delete this category?')) return;
+    if (!confirm(t('confirmDeleteCategory'))) return;
     try {
       await apiClient.delete(`/api/categories/${id}`);
       loadCategories();
-      setMessage('Category deleted successfully!');
+      setMessage(t('categoryDeleted'));
       setMessageType('success');
       setTimeout(() => setMessage(''), 3000);
     } catch (error: any) {
-      const errorMessage = error.response?.data?.error || 'Failed to delete category';
+      const errorMessage = error.response?.data?.error || t('failedToDeleteCategory');
       setMessage(errorMessage);
       setMessageType('error');
       setTimeout(() => setMessage(''), 5000);
@@ -152,8 +154,8 @@ export default function SettingsPage() {
     <ProtectedLayout>
       <div className="space-y-6 max-w-4xl">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Settings</h1>
-          <p className="text-gray-600 mt-2">Manage your account and preferences</p>
+          <h1 className="text-3xl font-bold text-gray-900">{t('accountSettings')}</h1>
+          <p className="text-gray-600 mt-2">{t('managePreferences')}</p>
         </div>
 
         {message && (
@@ -170,9 +172,9 @@ export default function SettingsPage() {
         <div className="border-b border-gray-200">
           <nav className="flex space-x-8">
             {[
-              { id: 'profile', label: 'Profile', icon: FiUser },
-              { id: 'categories', label: 'Categories', icon: FiGlobe },
-              { id: 'budgets', label: 'Budgets', icon: FiDollarSign },
+              { id: 'profile', label: t('profile'), icon: FiUser },
+              { id: 'categories', label: t('categories'), icon: FiGlobe },
+              { id: 'budgets', label: t('budgets'), icon: FiDollarSign },
             ].map((tab) => (
               <button
                 key={tab.id}
@@ -193,10 +195,10 @@ export default function SettingsPage() {
         {/* Profile Settings */}
         {activeTab === 'profile' && (
           <div className="bg-white rounded-lg shadow p-6">
-            <h2 className="text-xl font-semibold mb-6">Profile Settings</h2>
+            <h2 className="text-xl font-semibold mb-6">{t('profileSettings')}</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Currency</label>
+                <label className="block text-sm font-medium text-gray-700 mb-2">{t('currency')}</label>
                 <select
                   value={profileData.currency}
                   onChange={(e) => setProfileData({ ...profileData, currency: e.target.value })}
@@ -210,7 +212,7 @@ export default function SettingsPage() {
                 </select>
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Timezone</label>
+                <label className="block text-sm font-medium text-gray-700 mb-2">{t('timezone')}</label>
                 <select
                   value={profileData.timezone}
                   onChange={(e) => setProfileData({ ...profileData, timezone: e.target.value })}
@@ -224,6 +226,17 @@ export default function SettingsPage() {
                   <option value="Asia/Bangkok">Bangkok</option>
                 </select>
               </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">{t('language')}</label>
+                <select
+                  value={language}
+                  onChange={(e) => changeLanguage(e.target.value as 'en' | 'vi')}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  <option value="en">{t('english')}</option>
+                  <option value="vi">{t('vietnamese')}</option>
+                </select>
+              </div>
             </div>
             <div className="mt-6">
               <button
@@ -232,7 +245,7 @@ export default function SettingsPage() {
                 className="flex items-center space-x-2 bg-blue-500 hover:bg-blue-600 disabled:bg-gray-400 text-white px-4 py-2 rounded-lg transition"
               >
                 <FiSave size={18} />
-                <span>{loading ? 'Saving...' : 'Save Changes'}</span>
+                <span>{loading ? t('loading') : t('saveChanges')}</span>
               </button>
             </div>
           </div>
@@ -241,22 +254,22 @@ export default function SettingsPage() {
         {/* Categories Management */}
         {activeTab === 'categories' && (
           <div className="bg-white rounded-lg shadow p-6">
-            <h2 className="text-xl font-semibold mb-6">Manage Categories</h2>
+            <h2 className="text-xl font-semibold mb-6">{t('manageCategories')}</h2>
 
             {/* Add New Category */}
             <div className="mb-6 p-4 border border-gray-200 rounded-lg">
-              <h3 className="text-lg font-medium mb-4">Add New Category</h3>
+              <h3 className="text-lg font-medium mb-4">{t('addNewCategory')}</h3>
               <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                 <input
                   type="text"
-                  placeholder="Category name"
+                  placeholder={t('categoryName')}
                   value={newCategory.name}
                   onChange={(e) => setNewCategory({ ...newCategory, name: e.target.value })}
                   className="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
                 <input
                   type="text"
-                  placeholder="Icon (emoji)"
+                  placeholder={t('icon')}
                   value={newCategory.icon}
                   onChange={(e) => setNewCategory({ ...newCategory, icon: e.target.value })}
                   className="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -272,14 +285,14 @@ export default function SettingsPage() {
                   className="flex items-center justify-center space-x-2 bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg transition"
                 >
                   <FiPlus size={18} />
-                  <span>Add</span>
+                  <span>{t('add')}</span>
                 </button>
               </div>
             </div>
 
             {/* Existing Categories */}
             <div className="space-y-3">
-              <h3 className="text-lg font-medium">Existing Categories</h3>
+              <h3 className="text-lg font-medium">{t('existingCategories')}</h3>
               {categories.map((category) => (
                 <div key={category.id} className="flex items-center justify-between p-4 border border-gray-200 rounded-lg">
                   <div className="flex items-center space-x-3">
@@ -305,18 +318,18 @@ export default function SettingsPage() {
         {/* Budgets Management */}
         {activeTab === 'budgets' && (
           <div className="bg-white rounded-lg shadow p-6">
-            <h2 className="text-xl font-semibold mb-6">Manage Monthly Budgets</h2>
+            <h2 className="text-xl font-semibold mb-6">{t('manageBudgets')}</h2>
 
             {/* Add New Budget */}
             <div className="mb-6 p-4 border border-gray-200 rounded-lg">
-              <h3 className="text-lg font-medium mb-4">Add New Budget</h3>
+              <h3 className="text-lg font-medium mb-4">{t('addNewBudget')}</h3>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <select
                   value={newBudget.categoryId}
                   onChange={(e) => setNewBudget({ ...newBudget, categoryId: e.target.value })}
                   className="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                 >
-                  <option value="">Select Category</option>
+                  <option value="">{t('selectCategory')}</option>
                   {categories.map((cat) => (
                     <option key={cat.id} value={cat.id}>
                       {cat.icon} {cat.name}
@@ -325,7 +338,7 @@ export default function SettingsPage() {
                 </select>
                 <input
                   type="number"
-                  placeholder="Budget amount"
+                  placeholder={t('budgetAmount')}
                   value={newBudget.amount}
                   onChange={(e) => setNewBudget({ ...newBudget, amount: e.target.value })}
                   className="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -335,14 +348,14 @@ export default function SettingsPage() {
                   className="flex items-center justify-center space-x-2 bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg transition"
                 >
                   <FiPlus size={18} />
-                  <span>Add Budget</span>
+                  <span>{t('add')} {t('budgets').toLowerCase()}</span>
                 </button>
               </div>
             </div>
 
             {/* Existing Budgets */}
             <div className="space-y-3">
-              <h3 className="text-lg font-medium">Existing Budgets</h3>
+              <h3 className="text-lg font-medium">{t('existingBudgets')}</h3>
               {budgets.map((budget) => (
                 <div key={budget.id} className="flex items-center justify-between p-4 border border-gray-200 rounded-lg">
                   <div className="flex items-center space-x-3">
