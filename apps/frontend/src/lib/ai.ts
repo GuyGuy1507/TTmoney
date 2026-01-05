@@ -75,6 +75,11 @@ export function generateFinancialInsights(expenses: Expense[], income: number, e
     icon: string;
   }> = [];
 
+  // Return empty insights if no expenses
+  if (!expenses || expenses.length === 0) {
+    return insights;
+  }
+
   // Analyze spending patterns
   const categorySpending = expenses.reduce((acc, expense) => {
     const category = expense.category_name;
@@ -83,17 +88,20 @@ export function generateFinancialInsights(expenses: Expense[], income: number, e
   }, {} as Record<string, number>);
 
   // Find highest spending category
-  const topCategory = Object.entries(categorySpending).reduce((a, b) =>
-    categorySpending[a[0]] > categorySpending[b[0]] ? a : b
-  );
+  const categoryEntries = Object.entries(categorySpending);
+  if (categoryEntries.length > 0) {
+    const topCategory = categoryEntries.reduce((a, b) =>
+      categorySpending[a[0]] > categorySpending[b[0]] ? a : b
+    );
 
-  if (topCategory) {
-    insights.push({
-      type: 'warning',
-      title: 'Chi tiêu nhiều nhất',
-      message: `Bạn chi tiêu nhiều nhất cho ${topCategory[0]} (${formatCurrency(topCategory[1])}). Hãy xem xét giảm chi tiêu ở mục này.`,
-      icon: '⚠️'
-    });
+    if (topCategory) {
+      insights.push({
+        type: 'warning',
+        title: 'Chi tiêu nhiều nhất',
+        message: `Bạn chi tiêu nhiều nhất cho ${topCategory[0]} (${formatCurrency(topCategory[1])}). Hãy xem xét giảm chi tiêu ở mục này.`,
+        icon: '⚠️'
+      });
+    }
   }
 
   // Savings potential
@@ -126,14 +134,16 @@ export function generateFinancialInsights(expenses: Expense[], income: number, e
   }
 
   // Frequent small purchases
-  const smallPurchases = expenses.filter(e => parseFloat(e.amount) < 50000).length;
-  if (smallPurchases > expenses.length * 0.5) {
-    insights.push({
-      type: 'info',
-      title: 'Chi tiêu nhỏ lẻ',
-      message: `Bạn có nhiều giao dịch nhỏ. Hãy xem xét mua hàng số lượng lớn để tiết kiệm.`,
-      icon: '🛒'
-    });
+  if (expenses.length > 0) {
+    const smallPurchases = expenses.filter(e => parseFloat(e.amount) < 50000).length;
+    if (smallPurchases > expenses.length * 0.5) {
+      insights.push({
+        type: 'info',
+        title: 'Chi tiêu nhỏ lẻ',
+        message: `Bạn có nhiều giao dịch nhỏ. Hãy xem xét mua hàng số lượng lớn để tiết kiệm.`,
+        icon: '🛒'
+      });
+    }
   }
 
   return insights;
