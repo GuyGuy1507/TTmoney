@@ -7,6 +7,7 @@ import BudgetOverview from '@/components/BudgetOverview';
 import ExpenseForm from '@/components/ExpenseForm';
 import AIInsights from '@/components/AIInsights';
 import ProtectedLayout from '@/components/ProtectedLayout';
+import { useTranslation } from '@/hooks/useTranslation';
 
 interface Expense {
   id: string;
@@ -18,6 +19,7 @@ interface Expense {
 }
 
 export default function Home() {
+  const { t } = useTranslation();
   const [refreshTrigger, setRefreshTrigger] = useState(0);
   const [showExpenseForm, setShowExpenseForm] = useState(false);
   const [editingExpense, setEditingExpense] = useState<Expense | null>(null);
@@ -44,12 +46,12 @@ export default function Home() {
     <ProtectedLayout>
       <div className="grid grid-cols-1 gap-6">
         <div className="flex justify-between items-center">
-          <h1 className="text-3xl font-bold text-gray-800">Dashboard</h1>
+          <h1 className="text-3xl font-bold text-gray-800">{t('dashboard')}</h1>
           <button
             onClick={() => setShowExpenseForm(true)}
             className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg transition"
           >
-            + Add Expense
+            + {t('addExpense')}
           </button>
         </div>
 

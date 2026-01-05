@@ -28,6 +28,7 @@ export const translations = {
     monthlyIncome: 'Monthly Income',
     monthlyExpenses: 'Monthly Expenses',
     recentTransactions: 'Recent Transactions',
+    addExpense: 'Add Expense',
 
     // Transaction History
     transactionHistory: 'Transaction History',
@@ -181,6 +182,7 @@ export const translations = {
     monthlyIncome: 'Thu nhập tháng này',
     monthlyExpenses: 'Chi tiêu tháng này',
     recentTransactions: 'Giao dịch gần đây',
+    addExpense: 'Thêm chi tiêu',
 
     // Transaction History
     transactionHistory: 'Lịch sử giao dịch',
