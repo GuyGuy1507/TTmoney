@@ -35,6 +35,10 @@ export const translations = {
     // Transaction History
     transactionHistory: 'Transaction History',
     incomeHistory: 'Income History',
+    incomeManagement: 'Income Management',
+    trackIncomeSources: 'Track and manage your income sources',
+    addIncome: 'Add Income',
+    viewManageExpenses: 'View and manage your expenses',
     searchExpenses: 'Search expenses...',
     searchIncomes: 'Search incomes...',
     noExpenses: 'No expenses yet',
@@ -116,6 +120,7 @@ export const translations = {
     period: 'Period',
     transactions: 'transactions',
     average: 'Average',
+    monthlyExpenses: 'Monthly Expenses',
 
     // Settings
     accountSettings: 'Settings',
@@ -135,6 +140,7 @@ export const translations = {
 
     // Common
     loading: 'Loading...',
+    loadingAnalytics: 'Loading analytics...',
     error: 'Error',
     cancel: 'Cancel',
     delete: 'Delete',
@@ -190,6 +196,10 @@ export const translations = {
     // Transaction History
     transactionHistory: 'Lịch sử giao dịch',
     incomeHistory: 'Lịch sử thu nhập',
+    incomeManagement: 'Quản lý thu nhập',
+    trackIncomeSources: 'Theo dõi và quản lý nguồn thu nhập',
+    addIncome: 'Thêm thu nhập',
+    viewManageExpenses: 'Xem và quản lý chi tiêu của bạn',
     searchExpenses: 'Tìm kiếm chi tiêu...',
     searchIncomes: 'Tìm kiếm thu nhập...',
     noExpenses: 'Chưa có chi tiêu nào',
@@ -271,6 +281,7 @@ export const translations = {
     period: 'Thời gian',
     transactions: 'giao dịch',
     average: 'Trung bình',
+    monthlyExpenses: 'Chi tiêu hàng tháng',
 
     // Settings
     accountSettings: 'Cài đặt',
@@ -290,6 +301,7 @@ export const translations = {
 
     // Common
     loading: 'Đang tải...',
+    loadingAnalytics: 'Đang tải phân tích...',
     error: 'Lỗi',
     cancel: 'Hủy',
     delete: 'Xóa',

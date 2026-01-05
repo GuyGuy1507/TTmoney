@@ -5,6 +5,7 @@ import ProtectedLayout from '@/components/ProtectedLayout';
 import apiClient from '@/lib/apiClient';
 import { FiTrendingUp, FiTrendingDown, FiBarChart, FiPieChart } from 'react-icons/fi';
 import { Line } from 'react-chartjs-2';
+import { useTranslation } from '@/hooks/useTranslation';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -64,6 +65,7 @@ interface ComparisonData {
 }
 
 export default function AnalyticsPage() {
+  const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState<'trends' | 'categories' | 'comparison'>('trends');
   const [trendsData, setTrendsData] = useState<TrendData[]>([]);
   const [categoryData, setCategoryData] = useState<CategoryData[]>([]);
@@ -99,7 +101,7 @@ export default function AnalyticsPage() {
     labels: trendsData.map(item => item.period),
     datasets: [
       {
-        label: 'Monthly Expenses',
+        label: t('monthlyExpenses'),
         data: trendsData.map(item => item.total),
         borderColor: 'rgb(59, 130, 246)',
         backgroundColor: 'rgba(59, 130, 246, 0.1)',
@@ -160,7 +162,7 @@ export default function AnalyticsPage() {
     return (
       <ProtectedLayout>
         <div className="flex items-center justify-center h-64">
-          <div className="text-gray-600">Loading analytics...</div>
+          <div className="text-gray-600">{t('loadingAnalytics')}</div>
         </div>
       </ProtectedLayout>
     );
@@ -170,17 +172,17 @@ export default function AnalyticsPage() {
     <ProtectedLayout>
       <div className="space-y-6">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Analytics & Insights</h1>
-          <p className="text-gray-600 mt-2">Analyze your spending patterns and financial trends</p>
+          <h1 className="text-3xl font-bold text-gray-900">{t('analyticsInsights')}</h1>
+          <p className="text-gray-600 mt-2">{t('analyzePatterns')}</p>
         </div>
 
         {/* Tabs */}
         <div className="border-b border-gray-200">
           <nav className="flex space-x-8">
             {[
-              { id: 'trends', label: 'Expense Trends', icon: FiTrendingUp },
-              { id: 'categories', label: 'Category Analysis', icon: FiPieChart },
-              { id: 'comparison', label: 'Month Comparison', icon: FiBarChart },
+              { id: 'trends', label: t('expenseTrends'), icon: FiTrendingUp },
+              { id: 'categories', label: t('categoryAnalysis'), icon: FiPieChart },
+              { id: 'comparison', label: t('monthComparison'), icon: FiBarChart },
             ].map((tab) => (
               <button
                 key={tab.id}
@@ -203,7 +205,7 @@ export default function AnalyticsPage() {
           <div className="space-y-6">
             <div className="bg-white rounded-lg shadow p-6">
               <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-6 space-y-4 sm:space-y-0">
-                <h2 className="text-xl font-semibold">Expense Trends</h2>
+                <h2 className="text-xl font-semibold">{t('expenseTrends')}</h2>
                 <div className="flex items-center space-x-4 self-start sm:self-auto">
                   <span className="text-sm text-gray-600">Period:</span>
                   <select
@@ -246,7 +248,7 @@ export default function AnalyticsPage() {
         {/* Categories Tab */}
         {activeTab === 'categories' && (
           <div className="bg-white rounded-lg shadow p-6">
-            <h2 className="text-xl font-semibold mb-6">Spending by Category</h2>
+            <h2 className="text-xl font-semibold mb-6">{t('spendingByCategory')}</h2>
             <div className="space-y-4">
               {categoryData.map((category) => (
                 <div key={category.id} className="flex items-center justify-between p-4 border border-gray-200 rounded-lg">
@@ -272,7 +274,7 @@ export default function AnalyticsPage() {
           <div className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="bg-white rounded-lg shadow p-6">
-                <h3 className="text-lg font-semibold mb-4">Current Month</h3>
+                <h3 className="text-lg font-semibold mb-4">{t('currentMonth')}</h3>
                 <div className="space-y-2">
                   <p className="text-2xl font-bold text-gray-900">${Number(comparisonData.current.total || 0).toFixed(2)}</p>
                   <p className="text-sm text-gray-600">{comparisonData.current.transactionCount} transactions</p>
@@ -281,7 +283,7 @@ export default function AnalyticsPage() {
               </div>
 
               <div className="bg-white rounded-lg shadow p-6">
-                <h3 className="text-lg font-semibold mb-4">Previous Month</h3>
+                <h3 className="text-lg font-semibold mb-4">{t('previousMonth')}</h3>
                 <div className="space-y-2">
                   <p className="text-2xl font-bold text-gray-900">${Number(comparisonData.previous.total || 0).toFixed(2)}</p>
                   <p className="text-sm text-gray-600">{comparisonData.previous.transactionCount} transactions</p>
@@ -291,7 +293,7 @@ export default function AnalyticsPage() {
             </div>
 
             <div className="bg-white rounded-lg shadow p-6">
-              <h3 className="text-lg font-semibold mb-4">Month-over-Month Change</h3>
+              <h3 className="text-lg font-semibold mb-4">{t('monthOverMonthChange')}</h3>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div className="text-center">
                   <p className={`text-2xl font-bold ${comparisonData.change.amount >= 0 ? 'text-red-600' : 'text-green-600'}`}>

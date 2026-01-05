@@ -4,6 +4,7 @@ import { useState } from 'react';
 import ProtectedLayout from '@/components/ProtectedLayout';
 import IncomeList from '@/components/IncomeList';
 import IncomeForm from '@/components/IncomeForm';
+import { useTranslation } from '@/hooks/useTranslation';
 
 interface Income {
   id: string;
@@ -17,6 +18,7 @@ interface Income {
 }
 
 export default function IncomesPage() {
+  const { t } = useTranslation();
   const [editingIncome, setEditingIncome] = useState<Income | null>(null);
   const [showIncomeForm, setShowIncomeForm] = useState(false);
   const [refreshTrigger, setRefreshTrigger] = useState(0);
@@ -41,14 +43,14 @@ export default function IncomesPage() {
       <div className="space-y-6">
         <div className="flex justify-between items-center">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">Income Management</h1>
-            <p className="text-gray-600 mt-2">Track and manage your income sources</p>
+            <h1 className="text-3xl font-bold text-gray-900">{t('incomeManagement')}</h1>
+            <p className="text-gray-600 mt-2">{t('trackIncomeSources')}</p>
           </div>
           <button
             onClick={() => setShowIncomeForm(true)}
             className="bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded-lg transition"
           >
-            + Add Income
+            + {t('addIncome')}
           </button>
         </div>
 

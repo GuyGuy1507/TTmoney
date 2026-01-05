@@ -4,6 +4,7 @@ import { useState } from 'react';
 import ProtectedLayout from '@/components/ProtectedLayout';
 import ExpenseList from '@/components/ExpenseList';
 import ExpenseForm from '@/components/ExpenseForm';
+import { useTranslation } from '@/hooks/useTranslation';
 
 interface Expense {
   id: string;
@@ -17,6 +18,7 @@ interface Expense {
 }
 
 export default function ExpensesPage() {
+  const { t } = useTranslation();
   const [editingExpense, setEditingExpense] = useState<Expense | null>(null);
   const [refreshTrigger, setRefreshTrigger] = useState(0);
 
@@ -37,8 +39,8 @@ export default function ExpensesPage() {
     <ProtectedLayout>
       <div className="space-y-6">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Transaction History</h1>
-          <p className="text-gray-600 mt-2">View and manage your expenses</p>
+          <h1 className="text-3xl font-bold text-gray-900">{t('transactionHistory')}</h1>
+          <p className="text-gray-600 mt-2">{t('viewManageExpenses')}</p>
         </div>
         <ExpenseList refreshTrigger={refreshTrigger} onEdit={handleEdit} />
         {editingExpense && (

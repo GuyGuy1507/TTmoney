@@ -5,6 +5,7 @@ import ProtectedLayout from '@/components/ProtectedLayout';
 import apiClient from '@/lib/apiClient';
 import { FiTarget, FiPlus, FiTrendingUp, FiCalendar } from 'react-icons/fi';
 import { motion } from 'framer-motion';
+import { useTranslation } from '@/hooks/useTranslation';
 
 interface SavingsGoal {
   id: string;
@@ -28,6 +29,7 @@ interface Contribution {
 }
 
 export default function GoalsPage() {
+  const { t } = useTranslation();
   const [goals, setGoals] = useState<SavingsGoal[]>([]);
   const [selectedGoal, setSelectedGoal] = useState<SavingsGoal | null>(null);
   const [contributions, setContributions] = useState<Contribution[]>([]);
@@ -169,15 +171,15 @@ export default function GoalsPage() {
       <div className="space-y-6">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between space-y-4 sm:space-y-0">
           <div>
-            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Savings Goals</h1>
-            <p className="text-gray-600 mt-2 text-sm sm:text-base">Set and track your financial goals</p>
+            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">{t('savingsGoals')}</h1>
+            <p className="text-gray-600 mt-2 text-sm sm:text-base">{t('trackGoals')}</p>
           </div>
           <button
             onClick={() => setShowAddGoal(true)}
             className="flex items-center justify-center space-x-2 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition self-start sm:self-auto"
           >
             <FiPlus size={18} />
-            <span>Add Goal</span>
+            <span>{t('addGoal')}</span>
           </button>
         </div>
 
@@ -187,13 +189,13 @@ export default function GoalsPage() {
             {goals.length === 0 ? (
               <div className="bg-white rounded-lg shadow p-8 text-center">
                 <FiTarget size={48} className="mx-auto text-gray-400 mb-4" />
-                <h3 className="text-lg font-medium text-gray-900 mb-2">No savings goals yet</h3>
-                <p className="text-gray-600 mb-4">Create your first savings goal to start building wealth</p>
+                <h3 className="text-lg font-medium text-gray-900 mb-2">{t('noGoals')}</h3>
+                <p className="text-gray-600 mb-4">{t('createFirstGoal')}</p>
                 <button
                   onClick={() => setShowAddGoal(true)}
                   className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition"
                 >
-                  Create Your First Goal
+                  {t('createFirst')}
                 </button>
               </div>
             ) : (
@@ -255,7 +257,7 @@ export default function GoalsPage() {
             {selectedGoal ? (
               <>
                 <div className="bg-white rounded-lg shadow p-6">
-                  <h3 className="text-lg font-semibold mb-4">Goal Details</h3>
+                  <h3 className="text-lg font-semibold mb-4">{t('goalDetails')}</h3>
                   <div className="space-y-3">
                     <div className="flex justify-between">
                       <span className="text-gray-600">Target Amount</span>
@@ -293,7 +295,7 @@ export default function GoalsPage() {
                 </div>
 
                 <div className="bg-white rounded-lg shadow p-6">
-                  <h3 className="text-lg font-semibold mb-4">Recent Contributions</h3>
+                  <h3 className="text-lg font-semibold mb-4">{t('recentContributions')}</h3>
                   <div className="space-y-2 max-h-60 overflow-y-auto">
                     {contributions.length === 0 ? (
                       <p className="text-gray-600 text-sm">No contributions yet</p>
@@ -314,8 +316,8 @@ export default function GoalsPage() {
             ) : (
               <div className="bg-white rounded-lg shadow p-8 text-center">
                 <FiTrendingUp size={48} className="mx-auto text-gray-400 mb-4" />
-                <h3 className="text-lg font-medium text-gray-900 mb-2">Select a Goal</h3>
-                <p className="text-gray-600">Click on a savings goal to view details and add contributions</p>
+                <h3 className="text-lg font-medium text-gray-900 mb-2">{t('selectGoal')}</h3>
+                <p className="text-gray-600">{t('clickToView')}</p>
               </div>
             )}
           </div>
@@ -325,7 +327,7 @@ export default function GoalsPage() {
         {showAddGoal && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
             <div className="bg-white rounded-lg p-6 w-full max-w-md">
-              <h3 className="text-lg font-semibold mb-4">Add Savings Goal</h3>
+              <h3 className="text-lg font-semibold mb-4">{t('addSavingsGoal')}</h3>
               <div className="space-y-4">
                 <input
                   type="text"
