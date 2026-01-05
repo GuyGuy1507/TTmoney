@@ -18,9 +18,12 @@ export default function Navbar({ onMenuClick }: NavbarProps) {
   const { t } = useTranslation();
 
   const handleLogout = () => {
+    setShowMenu(false); // Close dropdown first
     logout();
-    // Small delay to ensure state update, then redirect
-    setTimeout(() => router.push('/login'), 100);
+    // Force page reload to login using window.location
+    setTimeout(() => {
+      window.location.href = '/login';
+    }, 100);
   };
 
   return (
