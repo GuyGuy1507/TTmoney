@@ -1,11 +1,15 @@
 'use client';
 
 import { useState } from 'react';
-import { FiLogOut, FiUser } from 'react-icons/fi';
+import { FiLogOut, FiUser, FiMenu } from 'react-icons/fi';
 import useAuthStore from '@/store/authStore';
 import { useRouter } from 'next/navigation';
 
-export default function Navbar() {
+interface NavbarProps {
+  onMenuClick?: () => void;
+}
+
+export default function Navbar({ onMenuClick }: NavbarProps) {
   const [showMenu, setShowMenu] = useState(false);
   const router = useRouter();
   const user = useAuthStore((state: any) => state.user);
@@ -19,6 +23,15 @@ export default function Navbar() {
   return (
     <nav className="bg-white border-b border-gray-200 px-4 md:px-6 py-4 flex items-center justify-between">
       <div className="flex items-center space-x-4">
+        {onMenuClick && (
+          <button
+            onClick={onMenuClick}
+            className="lg:hidden p-2 text-gray-600 hover:bg-gray-100 rounded-lg"
+            aria-label="Open menu"
+          >
+            <FiMenu size={20} />
+          </button>
+        )}
         <div className="text-lg font-semibold text-gray-800 truncate">TTMoney</div>
       </div>
       <div className="flex items-center space-x-4">
