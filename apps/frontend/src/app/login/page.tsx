@@ -30,25 +30,25 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-500 to-purple-600">
-      <div className="bg-white rounded-lg shadow-xl p-8 w-full max-w-md">
-        <h1 className="text-3xl font-bold text-center text-gray-800 mb-2">TTMoney</h1>
-        <p className="text-center text-gray-600 mb-8">Manage your expenses smartly</p>
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-500 to-purple-600 px-4 py-8">
+      <div className="bg-white rounded-lg shadow-xl p-6 sm:p-8 w-full max-w-md">
+        <h1 className="text-2xl sm:text-3xl font-bold text-center text-gray-800 mb-2">TTMoney</h1>
+        <p className="text-center text-gray-600 mb-6 sm:mb-8 text-sm sm:text-base">Manage your expenses smartly</p>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
           {error && (
-            <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
+            <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded text-sm">
               {error}
             </div>
           )}
 
           <div>
-            <label className="block text-gray-700 font-semibold mb-2">Email</label>
+            <label className="block text-gray-700 font-medium mb-2 text-sm sm:text-base">Email</label>
             <input
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-base"
               placeholder="you@example.com"
               required
               autoComplete="email"
@@ -56,12 +56,12 @@ export default function LoginPage() {
           </div>
 
           <div>
-            <label className="block text-gray-700 font-semibold mb-2">Password</label>
+            <label className="block text-gray-700 font-medium mb-2 text-sm sm:text-base">Password</label>
             <input
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-base"
               placeholder="••••••••"
               required
               autoComplete="current-password"
