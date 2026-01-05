@@ -2,6 +2,7 @@
 
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import { Doughnut } from 'react-chartjs-2';
+import { useTranslation } from '@/hooks/useTranslation';
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -10,6 +11,7 @@ interface ExpenseChartProps {
 }
 
 export default function ExpenseChart({ data }: ExpenseChartProps) {
+  const { t } = useTranslation();
   const chartData = {
     labels: data.map((d) => d.name),
     datasets: [
@@ -29,7 +31,7 @@ export default function ExpenseChart({ data }: ExpenseChartProps) {
 
   return (
     <div className="bg-white rounded-lg p-6 shadow">
-      <h3 className="text-lg font-bold mb-4">Spending Distribution</h3>
+      <h3 className="text-lg font-bold mb-4">{t('spendingDistribution')}</h3>
       <div className="flex justify-center">
         <Doughnut data={chartData} options={{ responsive: true, maintainAspectRatio: true }} />
       </div>

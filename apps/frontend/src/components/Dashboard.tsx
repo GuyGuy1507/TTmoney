@@ -6,6 +6,7 @@ import ExpenseChart from './ExpenseChart';
 import apiClient from '@/lib/apiClient';
 import { formatCurrency } from '@/lib/currency';
 import useAuthStore from '@/store/authStore';
+import { useTranslation } from '@/hooks/useTranslation';
 
 interface Stats {
   totalBalance: number;
@@ -19,6 +20,7 @@ interface DashboardProps {
 }
 
 export default function Dashboard({ refreshTrigger }: DashboardProps) {
+  const { t } = useTranslation();
   const [stats, setStats] = useState<Stats | null>(null);
   const [loading, setLoading] = useState(true);
   const user = useAuthStore((state: any) => state.user);
@@ -66,19 +68,19 @@ export default function Dashboard({ refreshTrigger }: DashboardProps) {
       {/* Stats Grid */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <StatCard
-          title="Total Balance"
+          title={t('totalBalance')}
           amount={stats?.totalBalance || 0}
           color="primary"
           icon="💰"
         />
         <StatCard
-          title="Monthly Income"
+          title={t('monthlyIncome')}
           amount={stats?.monthlyIncome || 0}
           color="secondary"
           icon="📈"
         />
         <StatCard
-          title="Monthly Expenses"
+          title={t('monthlyExpenses')}
           amount={stats?.monthlyExpenses || 0}
           color="danger"
           icon="💸"
@@ -91,7 +93,7 @@ export default function Dashboard({ refreshTrigger }: DashboardProps) {
           <ExpenseChart data={stats?.categories || []} />
         </div>
         <div className="bg-white rounded-lg p-6 shadow">
-          <h3 className="text-lg font-bold mb-4">Spending by Category</h3>
+          <h3 className="text-lg font-bold mb-4">{t('spendingByCategory')}</h3>
           <div className="space-y-3">
             {stats?.categories.map((cat) => (
               <div key={cat.name} className="flex justify-between items-center">
