@@ -3,6 +3,8 @@
 import { useState, useEffect } from 'react';
 import ProtectedLayout from '@/components/ProtectedLayout';
 import apiClient from '@/lib/apiClient';
+import { formatCurrency } from '@/lib/currency';
+import useAuthStore from '@/store/authStore';
 import { FiTarget, FiPlus, FiTrendingUp, FiCalendar } from 'react-icons/fi';
 import { motion } from 'framer-motion';
 import { useTranslation } from '@/hooks/useTranslation';
@@ -25,6 +27,8 @@ interface SavingsGoal {
 
 export default function GoalsPage() {
   const { t } = useTranslation();
+  const user = useAuthStore((state: any) => state.user);
+  const currency = user?.currency || 'USD';
   const [goals, setGoals] = useState<SavingsGoal[]>([]);
   const [selectedGoal, setSelectedGoal] = useState<SavingsGoal | null>(null);
   const [showAddGoal, setShowAddGoal] = useState(false);
@@ -183,7 +187,7 @@ export default function GoalsPage() {
                   <div className="space-y-2">
                     <div className="flex justify-between text-sm">
                       <span className="text-gray-600">Progress</span>
-                      <span className="font-medium">${Number(goal.current_amount || 0).toFixed(2)} / ${Number(goal.target_amount || 0).toFixed(2)}</span>
+                      <span className="font-medium">{formatCurrency(goal.current_amount || 0, currency)} / {formatCurrency(goal.target_amount || 0, currency)}</span>
                     </div>
                     <div className="w-full bg-gray-200 rounded-full h-2">
                       <div
@@ -215,15 +219,15 @@ export default function GoalsPage() {
                   <div className="space-y-3">
                     <div className="flex justify-between">
                       <span className="text-gray-600">Target Amount</span>
-                      <span className="font-medium">${Number(selectedGoal.target_amount || 0).toFixed(2)}</span>
+                      <span className="font-medium">{formatCurrency(selectedGoal.target_amount || 0, currency)}</span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-gray-600">Current Amount</span>
-                      <span className="font-medium">${Number(selectedGoal.current_amount || 0).toFixed(2)}</span>
+                      <span className="font-medium">{formatCurrency(selectedGoal.current_amount || 0, currency)}</span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-gray-600">Remaining</span>
-                      <span className="font-medium">${(Number(selectedGoal.target_amount || 0) - Number(selectedGoal.current_amount || 0)).toFixed(2)}</span>
+                      <span className="font-medium">{formatCurrency((selectedGoal.target_amount || 0) - (selectedGoal.current_amount || 0), currency)}</span>
                     </div>
                     {selectedGoal.target_date && (
                       <div className="flex justify-between">
@@ -232,13 +236,8 @@ export default function GoalsPage() {
                       </div>
                     )}
                   </div>
-                  <div className="mt-4 space-x-2">
-                    <button
+                  <div className="mt-4">
 
-                      className="bg-green-500 hover:bg-green-600 text-white px-3 py-2 rounded text-sm transition"
-                    >
-                      
-                    </button>
                     <button
                       onClick={() => deleteGoal(selectedGoal.id)}
                       className="bg-red-500 hover:bg-red-600 text-white px-3 py-2 rounded text-sm transition"
