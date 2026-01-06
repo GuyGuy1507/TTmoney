@@ -40,7 +40,10 @@ export default function SettingsPage() {
 
   useEffect(() => {
     if (activeTab === 'categories') loadCategories();
-    if (activeTab === 'budgets') loadBudgets();
+    if (activeTab === 'budgets') {
+      loadBudgets();
+      loadCategories(); // Load categories for the budget form dropdown
+    }
   }, [activeTab]);
 
   const loadCategories = async () => {

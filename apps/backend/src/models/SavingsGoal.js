@@ -6,15 +6,32 @@ class SavingsGoal {
     const id = uuidv4();
     const { name, targetAmount, targetDate, priority } = data;
     const result = await db.query(
-      'INSERT INTO savings_goals (id, user_id, name, target_amount, target_date, priority) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *',
-      [id, userId, name, targetAmount, targetDate, priority]
+      'INSERT INTO savings_goals (id, user_id, name, target_amount, target_date, priority, current_amount) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *',
+      [id, userId, name, targetAmount, targetDate, priority, 0]
     );
     return result.rows[0];
   }
 
   static async findByUserId(userId) {
+    // Calculate total balance (all-time income - all-time expenses)
+    const balanceResult = await db.query(`
+      SELECT
+        COALESCE((SELECT SUM(amount) FROM incomes WHERE user_id = $1), 0) -
+        COALESCE((SELECT SUM(amount) FROM expenses WHERE user_id = $1), 0) as total_balance
+    `, [userId]);
+
+    const totalBalance = parseFloat(balanceResult.rows[0].total_balance) || 0;
+
     const result = await db.query('SELECT * FROM savings_goals WHERE user_id = $1 ORDER BY created_at DESC', [userId]);
-    return result.rows;
+
+    // Add calculated current_amount based on total balance
+    const goals = result.rows.map(goal => ({
+      ...goal,
+      current_amount: totalBalance,
+      progress_percentage: goal.target_amount > 0 ? Math.min((totalBalance / goal.target_amount) * 100, 100) : 0
+    }));
+
+    return goals;
   }
 
   static async findById(id, userId) {
@@ -45,29 +62,7 @@ class SavingsGoal {
     return result.rows[0];
   }
 
-  static async addContribution(goalId, amount, description, contributionDate) {
-    const id = uuidv4();
-    const result = await db.query(
-      'INSERT INTO goal_contributions (id, goal_id, amount, description, contribution_date) VALUES ($1, $2, $3, $4, $5) RETURNING *',
-      [id, goalId, amount, description, contributionDate]
-    );
 
-    // Update current amount in savings goal
-    await db.query(
-      'UPDATE savings_goals SET current_amount = current_amount + $1 WHERE id = $2',
-      [amount, goalId]
-    );
-
-    return result.rows[0];
-  }
-
-  static async getContributions(goalId) {
-    const result = await db.query(
-      'SELECT * FROM goal_contributions WHERE goal_id = $1 ORDER BY contribution_date DESC',
-      [goalId]
-    );
-    return result.rows;
-  }
 }
 
 export default SavingsGoal;

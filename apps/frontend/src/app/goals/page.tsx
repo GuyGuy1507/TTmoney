@@ -18,23 +18,16 @@ interface SavingsGoal {
   priority: string;
   status: string;
   created_at: string;
+  progress_percentage: number;
 }
 
-interface Contribution {
-  id: string;
-  amount: number;
-  description?: string;
-  contribution_date: string;
-  created_at: string;
-}
+
 
 export default function GoalsPage() {
   const { t } = useTranslation();
   const [goals, setGoals] = useState<SavingsGoal[]>([]);
   const [selectedGoal, setSelectedGoal] = useState<SavingsGoal | null>(null);
-  const [contributions, setContributions] = useState<Contribution[]>([]);
   const [showAddGoal, setShowAddGoal] = useState(false);
-  const [showAddContribution, setShowAddContribution] = useState(false);
   const [loading, setLoading] = useState(true);
 
   const [newGoal, setNewGoal] = useState({
@@ -44,12 +37,6 @@ export default function GoalsPage() {
     targetDate: '',
     category: 'general',
     priority: 'medium'
-  });
-
-  const [newContribution, setNewContribution] = useState({
-    amount: '',
-    description: '',
-    contributionDate: new Date().toISOString().split('T')[0]
   });
 
   useEffect(() => {
@@ -64,15 +51,6 @@ export default function GoalsPage() {
       console.error('Failed to load goals');
     } finally {
       setLoading(false);
-    }
-  };
-
-  const loadContributions = async (goalId: string) => {
-    try {
-      const response = await apiClient.get(`/api/savings-goals/${goalId}/contributions`);
-      setContributions(response.data.contributions);
-    } catch (error) {
-      console.error('Failed to load contributions');
     }
   };
 
@@ -102,29 +80,6 @@ export default function GoalsPage() {
     }
   };
 
-  const addContribution = async () => {
-    if (!selectedGoal || !newContribution.amount) return;
-
-    try {
-      await apiClient.post(`/api/savings-goals/${selectedGoal.id}/contributions`, {
-        amount: parseFloat(newContribution.amount),
-        description: newContribution.description,
-        contributionDate: newContribution.contributionDate
-      });
-
-      setNewContribution({
-        amount: '',
-        description: '',
-        contributionDate: new Date().toISOString().split('T')[0]
-      });
-      setShowAddContribution(false);
-      loadGoals();
-      loadContributions(selectedGoal.id);
-    } catch (error) {
-      console.error('Failed to add contribution');
-    }
-  };
-
   const deleteGoal = async (goalId: string) => {
     if (!confirm('Are you sure you want to delete this savings goal?')) return;
 
@@ -141,7 +96,6 @@ export default function GoalsPage() {
 
   const selectGoal = (goal: SavingsGoal) => {
     setSelectedGoal(goal);
-    loadContributions(goal.id);
   };
 
   const getProgressPercentage = (goal: SavingsGoal) => {
@@ -280,10 +234,10 @@ export default function GoalsPage() {
                   </div>
                   <div className="mt-4 space-x-2">
                     <button
-                      onClick={() => setShowAddContribution(true)}
+
                       className="bg-green-500 hover:bg-green-600 text-white px-3 py-2 rounded text-sm transition"
                     >
-                      Add Contribution
+                      
                     </button>
                     <button
                       onClick={() => deleteGoal(selectedGoal.id)}
@@ -294,24 +248,7 @@ export default function GoalsPage() {
                   </div>
                 </div>
 
-                <div className="bg-white rounded-lg shadow p-6">
-                  <h3 className="text-lg font-semibold mb-4">{t('recentContributions')}</h3>
-                  <div className="space-y-2 max-h-60 overflow-y-auto">
-                    {contributions.length === 0 ? (
-                      <p className="text-gray-600 text-sm">No contributions yet</p>
-                    ) : (
-                      contributions.slice(0, 5).map((contribution) => (
-                        <div key={contribution.id} className="flex justify-between items-center py-2 border-b border-gray-100 last:border-b-0">
-                          <div>
-                            <p className="font-medium">${Number(contribution.amount || 0).toFixed(2)}</p>
-                            <p className="text-sm text-gray-600">{contribution.description || 'No description'}</p>
-                          </div>
-                          <span className="text-sm text-gray-500">{new Date(contribution.contribution_date).toLocaleDateString()}</span>
-                        </div>
-                      ))
-                    )}
-                  </div>
-                </div>
+
               </>
             ) : (
               <div className="bg-white rounded-lg shadow p-8 text-center">
@@ -384,50 +321,7 @@ export default function GoalsPage() {
           </div>
         )}
 
-        {/* Add Contribution Modal */}
-        {showAddContribution && selectedGoal && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-            <div className="bg-white rounded-lg p-6 w-full max-w-md">
-              <h3 className="text-lg font-semibold mb-4">Add Contribution to {selectedGoal.name}</h3>
-              <div className="space-y-4">
-                <input
-                  type="number"
-                  placeholder="Contribution amount"
-                  value={newContribution.amount}
-                  onChange={(e) => setNewContribution({ ...newContribution, amount: e.target.value })}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-                <textarea
-                  placeholder="Description (optional)"
-                  value={newContribution.description}
-                  onChange={(e) => setNewContribution({ ...newContribution, description: e.target.value })}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  rows={3}
-                />
-                <input
-                  type="date"
-                  value={newContribution.contributionDate}
-                  onChange={(e) => setNewContribution({ ...newContribution, contributionDate: e.target.value })}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-              </div>
-              <div className="mt-6 flex space-x-3">
-                <button
-                  onClick={addContribution}
-                  className="flex-1 bg-green-500 hover:bg-green-600 text-white py-2 rounded-lg transition"
-                >
-                  Add Contribution
-                </button>
-                <button
-                  onClick={() => setShowAddContribution(false)}
-                  className="flex-1 bg-gray-500 hover:bg-gray-600 text-white py-2 rounded-lg transition"
-                >
-                  Cancel
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
+
       </div>
     </ProtectedLayout>
   );

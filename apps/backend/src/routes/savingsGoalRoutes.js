@@ -9,7 +9,6 @@ router.post('/', authMiddleware, savingsGoalController.createSavingsGoal);
 router.put('/:id', authMiddleware, savingsGoalController.updateSavingsGoal);
 router.delete('/:id', authMiddleware, savingsGoalController.deleteSavingsGoal);
 
-router.post('/:id/contributions', authMiddleware, savingsGoalController.addContribution);
-router.get('/:id/contributions', authMiddleware, savingsGoalController.getContributions);
+
 
 export default router;
