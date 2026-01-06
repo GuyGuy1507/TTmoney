@@ -3,6 +3,8 @@
 import { useState, useEffect } from 'react';
 import ProtectedLayout from '@/components/ProtectedLayout';
 import apiClient from '@/lib/apiClient';
+import { formatCurrency } from '@/lib/currency';
+import useAuthStore from '@/store/authStore';
 import { FiTrendingUp, FiTrendingDown, FiBarChart, FiPieChart } from 'react-icons/fi';
 import { Line } from 'react-chartjs-2';
 import { useTranslation } from '@/hooks/useTranslation';
@@ -66,6 +68,8 @@ interface ComparisonData {
 
 export default function AnalyticsPage() {
   const { t } = useTranslation();
+  const user = useAuthStore((state: any) => state.user);
+  const currency = user?.currency || 'USD';
   const [activeTab, setActiveTab] = useState<'trends' | 'categories' | 'comparison'>('trends');
   const [trendsData, setTrendsData] = useState<TrendData[]>([]);
   const [categoryData, setCategoryData] = useState<CategoryData[]>([]);
@@ -129,9 +133,9 @@ export default function AnalyticsPage() {
           label: function(context: any) {
             const item = trendsData[context.dataIndex];
             return [
-              `Total: $${Number(context.parsed.y).toFixed(2)}`,
+              `Total: ${formatCurrency(context.parsed.y, currency)}`,
               `Transactions: ${item.transactionCount}`,
-              `Average: $${Number(item.averageTransaction).toFixed(2)}`
+              `Average: ${formatCurrency(item.averageTransaction, currency)}`
             ];
           }
         }
@@ -142,7 +146,7 @@ export default function AnalyticsPage() {
         beginAtZero: true,
         ticks: {
           callback: function(value: any) {
-            return '$' + value.toLocaleString();
+            return formatCurrency(value, currency);
           }
         }
       },
@@ -230,7 +234,7 @@ export default function AnalyticsPage() {
                   <div className="flex items-center justify-between">
                     <div>
                       <p className="text-sm text-gray-600">{item.period}</p>
-                      <p className="text-2xl font-bold text-gray-900">${Number(item.total || 0).toFixed(2)}</p>
+                      <p className="text-2xl font-bold text-gray-900">{formatCurrency(item.total || 0, currency)}</p>
                       <p className="text-sm text-gray-500">{item.transactionCount} transactions</p>
                     </div>
                     {index > 0 && (
@@ -260,7 +264,7 @@ export default function AnalyticsPage() {
                     <span className="font-medium">{category.name}</span>
                   </div>
                   <div className="flex items-center space-x-4">
-                    <span className="font-semibold">${Number(category.total || 0).toFixed(2)}</span>
+                    <span className="font-semibold">{formatCurrency(category.total || 0, currency)}</span>
                     <span className="text-sm text-gray-600">({category.percentage}%)</span>
                   </div>
                 </div>
@@ -276,18 +280,18 @@ export default function AnalyticsPage() {
               <div className="bg-white rounded-lg shadow p-6">
                 <h3 className="text-lg font-semibold mb-4">{t('currentMonth')}</h3>
                 <div className="space-y-2">
-                  <p className="text-2xl font-bold text-gray-900">${Number(comparisonData.current.total || 0).toFixed(2)}</p>
+                  <p className="text-2xl font-bold text-gray-900">{formatCurrency(comparisonData.current.total || 0, currency)}</p>
                   <p className="text-sm text-gray-600">{comparisonData.current.transactionCount} transactions</p>
-                  <p className="text-sm text-gray-500">Avg: ${Number(comparisonData.current.averageTransaction || 0).toFixed(2)}</p>
+                  <p className="text-sm text-gray-500">Avg: {formatCurrency(comparisonData.current.averageTransaction || 0, currency)}</p>
                 </div>
               </div>
 
               <div className="bg-white rounded-lg shadow p-6">
                 <h3 className="text-lg font-semibold mb-4">{t('previousMonth')}</h3>
                 <div className="space-y-2">
-                  <p className="text-2xl font-bold text-gray-900">${Number(comparisonData.previous.total || 0).toFixed(2)}</p>
+                  <p className="text-2xl font-bold text-gray-900">{formatCurrency(comparisonData.previous.total || 0, currency)}</p>
                   <p className="text-sm text-gray-600">{comparisonData.previous.transactionCount} transactions</p>
-                  <p className="text-sm text-gray-500">Avg: ${Number(comparisonData.previous.averageTransaction || 0).toFixed(2)}</p>
+                  <p className="text-sm text-gray-500">Avg: {formatCurrency(comparisonData.previous.averageTransaction || 0, currency)}</p>
                 </div>
               </div>
             </div>
@@ -297,7 +301,7 @@ export default function AnalyticsPage() {
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div className="text-center">
                   <p className={`text-2xl font-bold ${comparisonData.change.amount >= 0 ? 'text-red-600' : 'text-green-600'}`}>
-                    {comparisonData.change.amount >= 0 ? '+' : ''}${Number(comparisonData.change.amount || 0).toFixed(2)}
+                    {(comparisonData.change.amount >= 0 ? '+' : '') + formatCurrency(comparisonData.change.amount || 0, currency)}
                   </p>
                   <p className="text-sm text-gray-600">Amount Change</p>
                 </div>
